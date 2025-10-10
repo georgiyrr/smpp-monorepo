@@ -1,6 +1,6 @@
 [submodule "infrastructure"]
 	path = infrastructure
-	url = https://github.com/georgiyrr/shared-infrastructure.git
+	url = git@github.com:georgiyrr/shared-infrastructure.git
 [submodule "smpp-hlr-gateway"]
 	path = smpp-hlr-gateway
-	url = https://github.com/georgiyrr/smpp-hlr-gateway.git
+	url = git@github.com:georgiyrr/smpp-hlr-gateway.git
