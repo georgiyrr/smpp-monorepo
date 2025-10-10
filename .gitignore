@@ -1,0 +1,24 @@
+# Environment
+.env
+**/.env
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+**/.venv/
+**/venv/
+
+# IDE - PyCharm
+.idea/
+*.iml
+
+# IDE - VSCode  
+.vscode/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
