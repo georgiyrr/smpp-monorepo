@@ -18,7 +18,7 @@ smpp_server/
 
 ### 1. Clone with submodules
 ```bash
-git clone --recursive https://github.com/georgiyrr/smpp_server.git
+git clone --recursive https://github.com/georgiyrr/smpp-monorepo.git
 cd smpp_server
 Or if already cloned:
 bashgit submodule update --init --recursive
