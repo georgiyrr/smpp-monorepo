@@ -4,3 +4,6 @@
 [submodule "smpp-hlr-gateway"]
 	path = smpp-hlr-gateway
 	url = git@github.com:georgiyrr/smpp-hlr-gateway.git
+[submodule "smpp-hlr-gateway-dlv"]
+	path = smpp-hlr-gateway-dlv
+	url = git@github.com:georgiyrr/smpp-hlr-gateway-dlv.git
