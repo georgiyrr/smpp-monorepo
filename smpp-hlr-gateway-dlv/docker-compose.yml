@@ -1,0 +1,81 @@
+services:
+  smpp-gateway:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: smpp-gateway
+    restart: unless-stopped
+    ports:
+      - "2776:2776"  # SMPP port
+      - "9091:9091"  # Prometheus metrics
+    env_file:
+      - .env
+    environment:
+      # SMPP Server
+      SMPP_HOST: 0.0.0.0
+      SMPP_PORT: 2776
+      SMPP_SYSTEM_ID: ${SMPP_SYSTEM_ID:-testuser}
+      SMPP_PASSWORD: ${SMPP_PASSWORD:-testpass}
+
+      # TMT Velocity HLR API
+      HLR_API_KEY: ${HLR_API_KEY:-MyApiKey}
+      HLR_API_SECRET: ${HLR_API_SECRET:-MyApiSecret}
+      HLR_BASE_URL: ${HLR_BASE_URL:-https://api.tmtvelocity.com/live/json}
+      HLR_TIMEOUT_SECONDS: ${HLR_TIMEOUT_SECONDS:-5.0}
+      HLR_TIMEOUT_POLICY: ${HLR_TIMEOUT_POLICY:-reject}
+      HLR_CACHE_TTL_SECONDS: ${HLR_CACHE_TTL_SECONDS:-86400}
+
+      # Redis (from shared infrastructure)
+      REDIS_URL: redis://shared-redis:6379/0
+      REDIS_MAX_CONNECTIONS: ${REDIS_MAX_CONNECTIONS:-10}
+
+      # PostgreSQL (from shared infrastructure)
+      DB_ENABLED: ${DB_ENABLED:-true}
+      DB_HOST: shared-postgres
+      DB_PORT: 5432
+      DB_NAME: smpp_hlr
+      DB_USER: smpp_user
+      DB_PASSWORD: ${DB_PASSWORD:-smpp_password_change_me}
+      DB_POOL_MIN: ${DB_POOL_MIN:-5}
+      DB_POOL_MAX: ${DB_POOL_MAX:-20}
+
+      # Cache warmup
+      CACHE_WARMUP_ENABLED: ${CACHE_WARMUP_ENABLED:-true}
+      CACHE_WARMUP_DAYS: ${CACHE_WARMUP_DAYS:-7}
+      CACHE_WARMUP_LIMIT: ${CACHE_WARMUP_LIMIT:-100000}
+
+      # Logging
+      LOG_LEVEL: ${LOG_LEVEL:-INFO}
+      LOG_FORMAT: ${LOG_FORMAT:-json}
+
+      # Metrics
+      METRICS_ENABLED: ${METRICS_ENABLED:-true}
+      METRICS_PORT: 9091
+      METRICS_PATH: /metrics
+
+      # DLR
+      DLR_DELAY_SECONDS: ${DLR_DELAY_SECONDS:-1.0}
+
+    healthcheck:
+      test: ["CMD", "python", "main.py", "healthcheck"]
+      interval: 30s
+      timeout: 10s
+      start_period: 40s
+      retries: 3
+
+    networks:
+      - shared-network
+
+    deploy:
+      resources:
+        limits:
+          cpus: '8'
+          memory: 4g
+        reservations:
+          cpus: '2'
+          memory: 1g
+
+networks:
+  shared-network:
+    external: true
+    name: shared-network
